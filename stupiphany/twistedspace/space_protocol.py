@@ -2,7 +2,7 @@ from twisted.internet.protocol import Factory
 from twisted.protocols.basic import LineReceiver
 import sys
 
-class EvalProtocol(LineReceiver):
+class SpaceProtocol(LineReceiver):
 
     def __init__(self, object_store):
         sys.stdout.write("Created\n")
@@ -25,9 +25,9 @@ class EvalProtocol(LineReceiver):
             self.object_store.append(result)
             print self.object_store
 
-class EvalFactory(Factory):
+class SpaceFactory(Factory):
     def __init__(self):
         self.object_store = []
 
     def buildProtocol(self, addr):
-        return EvalProtocol(self.object_store)
+        return SpaceProtocol(self.object_store)
