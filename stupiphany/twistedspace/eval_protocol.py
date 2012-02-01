@@ -4,8 +4,9 @@ import sys
 
 class EvalProtocol(LineReceiver):
 
-    def __init__(self):
+    def __init__(self, object_store):
         sys.stdout.write("Created\n")
+        self.object_store = object_store
 
     def connectionMade(self):
         sys.stdout.write("Connection made\n")
@@ -15,9 +16,18 @@ class EvalProtocol(LineReceiver):
 
     def lineReceived(self, line):
         sys.stdout.write(line + " = ")
-        result = str(eval(line))
-        sys.stdout.write(result + "\n")
+        result = eval(line)
+        sys.stdout.write(str(result) + "\n")
+
+        if not isinstance(result, dict):
+            print "Not a dictionary, discarding"
+        else:
+            self.object_store.append(result)
+            print self.object_store
 
 class EvalFactory(Factory):
+    def __init__(self):
+        self.object_store = []
+
     def buildProtocol(self, addr):
-        return EvalProtocol()
+        return EvalProtocol(self.object_store)
