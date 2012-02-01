@@ -25,6 +25,8 @@ class SpaceProtocol(LineReceiver):
             self.object_store.append(result)
             print self.object_store
 
+        self.sendLine("Boo!")
+
 class SpaceFactory(Factory):
     def __init__(self):
         self.object_store = []
