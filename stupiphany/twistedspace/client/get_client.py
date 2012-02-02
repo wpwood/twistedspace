@@ -4,13 +4,12 @@ from twisted.internet.endpoints import TCP4ClientEndpoint
 import sys
 from stupiphany.twistedspace.client.space_client_protocol import SpaceClientFactory
 
-def gotProtocol(p, tuple):
-    print tuple
-    d = p.put(tuple)
-    d.addCallback(exitReactor, p)
+def gotProtocol(p, match):
+    d = p.get(match)
+    d.addCallback(printResponse, p)
 
-def exitReactor(ignored, p):
-    print "In exitReactor"
+def printResponse(response, p):
+    print "Response = " + response
     p.transport.loseConnection()
     reactor.stop()
 

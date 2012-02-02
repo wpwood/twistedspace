@@ -23,8 +23,14 @@ class SpaceProtocol(LineReceiver):
             self.object_store.put(result)
             print self.object_store
 
-    def handle_GET(self, request):
-        return self.object_store.get(request)
+    def handle_GET(self, line):
+        request = eval(line)
+        if not isinstance(request, dict):
+            print "Not a dictionary, discarding"
+        else:
+            value = self.object_store.get(request)
+            print self.object_store
+            return value
 
     def lineReceived(self, line):
         command = line[0:4]
@@ -34,7 +40,8 @@ class SpaceProtocol(LineReceiver):
             self.handle_PUT(tuple)
             self.sendLine("DONE")
         elif command == 'GET:':
-            self.sendLine(str(self.handle_GET(tuple)))
+            value = self.handle_GET(tuple)
+            self.sendLine(str(value))
         else:
             print("Unrecognized request -- " + line)
             self.sendLine("ERROR")
