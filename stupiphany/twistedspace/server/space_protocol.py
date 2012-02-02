@@ -1,5 +1,6 @@
 from twisted.internet.protocol import Factory
 from twisted.protocols.basic import LineReceiver
+from stupiphany.twistedspace.server.object_store import ObjectStore
 import sys
 
 class SpaceProtocol(LineReceiver):
@@ -14,22 +15,34 @@ class SpaceProtocol(LineReceiver):
     def connectionLost(self, reason):
         sys.stdout.write("Connection lost\n")
 
-    def lineReceived(self, line):
-        sys.stdout.write(line + " = ")
+    def handle_PUT(self, line):
         result = eval(line)
-        sys.stdout.write(str(result) + "\n")
-
         if not isinstance(result, dict):
             print "Not a dictionary, discarding"
         else:
-            self.object_store.append(result)
+            self.object_store.put(result)
             print self.object_store
 
-        self.sendLine("Boo!")
+    def handle_GET(self, request):
+        return self.object_store.get(request)
+
+    def lineReceived(self, line):
+        command = line[0:4]
+        tuple = line[4:]
+
+        if command == 'PUT:':
+            self.handle_PUT(tuple)
+            self.sendLine("DONE")
+        elif command == 'GET:':
+            self.sendLine(str(self.handle_GET(tuple)))
+        else:
+            print("Unrecognized request -- " + line)
+            self.sendLine("ERROR")
+
 
 class SpaceFactory(Factory):
     def __init__(self):
-        self.object_store = []
+        self.object_store = ObjectStore()
 
     def buildProtocol(self, addr):
         return SpaceProtocol(self.object_store)

@@ -1,5 +1,5 @@
 from twisted.internet import reactor
-from space_protocol import SpaceFactory
+from stupiphany.twistedspace.server.space_protocol import SpaceFactory
 
 def up_and_running():
     print "Up and running"

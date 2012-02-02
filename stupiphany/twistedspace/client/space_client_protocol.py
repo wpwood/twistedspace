@@ -4,9 +4,7 @@ from twisted.protocols.basic import LineReceiver
 
 class SpaceClientProtocol(LineReceiver):
     def put(self, dict):
-        #self.transport.write("PUT:")
-        self.transport.write(str(dict))
-        self.transport.write("\r\n")
+        self.sendLine("PUT:" + str(dict))
         self._waiting = defer.Deferred()
 
         return self._waiting

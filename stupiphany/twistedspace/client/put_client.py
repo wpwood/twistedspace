@@ -2,7 +2,7 @@ from twisted.internet import reactor
 from twisted.python.log import startLogging
 from twisted.internet.endpoints import TCP4ClientEndpoint
 import sys
-from space_client_protocol import SpaceClientFactory
+from stupiphany.twistedspace.client.space_client_protocol import SpaceClientFactory
 
 def gotProtocol(p):
     d = p.put("dict(name='Bill', age=45)")
