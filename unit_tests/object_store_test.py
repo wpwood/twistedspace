@@ -20,7 +20,7 @@ class ObjectStoreTest(TestCase):
     def test_get_value_with_no_match(self):
         os = ObjectStore([{'a': 1}, {'b': 5, 'c': 6}])
 
-        self.assertEqual({}, os.get({'a': 5}))
+        self.assertEqual(None, os.get({'a': 5}))
 
     def test_get_value_with_match(self):
         os = ObjectStore([{'a': 1}, {'b': 5, 'c': 6}])

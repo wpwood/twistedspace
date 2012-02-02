@@ -16,7 +16,7 @@ class ObjectStore(object):
                 self.store.remove(o)
                 return o
         else:
-            return {}
+            return None
 
     def __str__(self):
         return str(self.store)
