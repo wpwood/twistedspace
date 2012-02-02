@@ -27,6 +27,12 @@ class ObjectStoreTest(TestCase):
 
         self.assertEqual({'b': 5, 'c': 6}, os.get({'b': 5}))
 
+    def test_get_removes_matched_value(self):
+        os = ObjectStore([{'a': 1}, {'b': 5, 'c': 6}])
+
+        self.assertEqual({'b': 5, 'c': 6}, os.get({'b': 5}))
+        self.assertEqual(1, os.size())
+
 class ObjectMatcherTest(TestCase):
     def test_creation(self):
         om = ObjectMatcher({})
